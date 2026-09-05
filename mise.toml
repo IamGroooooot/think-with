@@ -1,0 +1,17 @@
+[tools]
+uv = "0.11.16"
+
+[env]
+UV_PYTHON = "3.12"
+
+[tasks.build]
+description = "Generate Claude Code and Codex skills and plugins"
+run = "uv run --script scripts/build.py"
+
+[tasks.check]
+description = "Check committed output and run packaging tests"
+run = "uv run --script scripts/check.py"
+
+[tasks.inspect]
+description = "Inspect a source skill without copying or executing it"
+run = "uv run --script scripts/inspect_skill.py"

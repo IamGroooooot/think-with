@@ -1,0 +1,13 @@
+{
+  "name": "think-with",
+  "plugins": [
+    {
+      "name": "think-with",
+      "source": "./plugins/claude/think-with"
+    }
+  ],
+  "owner": {
+    "name": "IamGroooooot"
+  },
+  "description": "Plugins to think with"
+}

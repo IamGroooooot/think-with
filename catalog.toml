@@ -1,0 +1,11 @@
+[marketplace]
+name = "think-with"
+display_name = "Think with"
+description = "Plugins to think with"
+owner = "IamGroooooot"
+repository = "https://github.com/IamGroooooot/think-with"
+
+[plugins.think-with]
+version = "0.1.0"
+description = "Things to think with"
+skills = []

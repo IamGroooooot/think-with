@@ -1,0 +1,16 @@
+[
+  ".agents/plugins/marketplace.json",
+  ".agents/skills/manage-skills/SKILL.md",
+  ".agents/skills/manage-skills/references/authoring.md",
+  ".agents/skills/manage-skills/references/platforms.md",
+  ".agents/skills/port-skill/SKILL.md",
+  ".agents/skills/port-skill/references/porting.md",
+  ".claude-plugin/marketplace.json",
+  ".claude/skills/manage-skills/SKILL.md",
+  ".claude/skills/manage-skills/references/authoring.md",
+  ".claude/skills/manage-skills/references/platforms.md",
+  ".claude/skills/port-skill/SKILL.md",
+  ".claude/skills/port-skill/references/porting.md",
+  "plugins/claude/think-with/.claude-plugin/plugin.json",
+  "plugins/codex/think-with/.codex-plugin/plugin.json"
+]

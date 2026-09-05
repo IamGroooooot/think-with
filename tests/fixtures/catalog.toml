@@ -1,0 +1,11 @@
+[marketplace]
+name = "think-with"
+display_name = "Test marketplace"
+description = "Packaging test fixture"
+owner = "example"
+repository = "https://github.com/example/skills"
+
+[plugins.think-with]
+version = "0.1.0"
+description = "Test plugin"
+skills = []

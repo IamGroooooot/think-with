@@ -1,0 +1,20 @@
+{
+  "name": "think-with",
+  "plugins": [
+    {
+      "name": "think-with",
+      "source": {
+        "source": "local",
+        "path": "./plugins/codex/think-with"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ],
+  "interface": {
+    "displayName": "Think with"
+  }
+}

@@ -6,6 +6,6 @@ owner = "IamGroooooot"
 repository = "https://github.com/IamGroooooot/think-with"
 
 [plugins.think-with]
-version = "0.1.0"
+version = "0.1.1"
 description = "Things to think with"
-skills = []
+skills = ["lay-out"]

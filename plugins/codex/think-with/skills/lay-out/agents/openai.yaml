@@ -1,0 +1,4 @@
+interface:
+  display_name: Lay Out
+  short_description: Show the smallest useful visual explanation
+  default_prompt: Use $lay-out to show the smallest useful view.

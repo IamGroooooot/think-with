@@ -1,0 +1,17 @@
+invocation = "auto"
+files = [
+  "references/dfd.md",
+  "references/sequence.md",
+  "references/structural-diff.md",
+  "references/swimlane.md",
+]
+
+[origin]
+repository = "local:agents-harness-skills"
+revision = "working-tree-sha256:36c55c79fe9968aad7f6e6268a33b8e6485cfb736959b0e19122687bd9922786"
+path = "lay-out"
+
+[codex.openai.interface]
+display_name = "Lay Out"
+short_description = "Show the smallest useful visual explanation"
+default_prompt = "Use $lay-out to show the smallest useful view."

@@ -22,7 +22,7 @@ change depends on a host's metadata, tools, or installation behavior.
   not globally replace tool names or assume two tools accept the same inputs.
 - Add a public skill to its plugin's `skills` array in `catalog.toml`. A new
   plugin needs a new table there; the generator builds both platform packages.
-  Remove the README's empty-scaffold sentence when the first public skill is added.
+  Update the README's skill list.
 - Keep scripts as Python uv scripts. Resolve bundled data relative to the
   script's `__file__`; keep user input/output paths independent of that location.
 

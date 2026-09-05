@@ -91,8 +91,8 @@ tests; static Markdown checks cannot discover arbitrary file accesses.
 
 `catalog.toml` holds marketplace identity and one `[plugins.<name>]` table per
 plugin, containing `version`, `description`, and `skills`. Keep the same skill
-name on both hosts. The initial think-with plugin intentionally has no public
-skills. Do not add a demonstration skill just to fill it.
+name on both hosts. List distributable skills explicitly. Do not add a
+demonstration skill just to fill a plugin.
 
 Build outputs are ordinary files below `plugins/claude/<plugin>` and
 `plugins/codex/<plugin>`, plus the two root marketplace manifests and internal

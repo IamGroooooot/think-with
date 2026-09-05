@@ -12,5 +12,20 @@
   ".claude/skills/port-skill/SKILL.md",
   ".claude/skills/port-skill/references/porting.md",
   "plugins/claude/think-with/.claude-plugin/plugin.json",
-  "plugins/codex/think-with/.codex-plugin/plugin.json"
+  "plugins/claude/think-with/skills/lay-out/LICENSE",
+  "plugins/claude/think-with/skills/lay-out/NOTICE",
+  "plugins/claude/think-with/skills/lay-out/SKILL.md",
+  "plugins/claude/think-with/skills/lay-out/references/dfd.md",
+  "plugins/claude/think-with/skills/lay-out/references/sequence.md",
+  "plugins/claude/think-with/skills/lay-out/references/structural-diff.md",
+  "plugins/claude/think-with/skills/lay-out/references/swimlane.md",
+  "plugins/codex/think-with/.codex-plugin/plugin.json",
+  "plugins/codex/think-with/skills/lay-out/LICENSE",
+  "plugins/codex/think-with/skills/lay-out/NOTICE",
+  "plugins/codex/think-with/skills/lay-out/SKILL.md",
+  "plugins/codex/think-with/skills/lay-out/agents/openai.yaml",
+  "plugins/codex/think-with/skills/lay-out/references/dfd.md",
+  "plugins/codex/think-with/skills/lay-out/references/sequence.md",
+  "plugins/codex/think-with/skills/lay-out/references/structural-diff.md",
+  "plugins/codex/think-with/skills/lay-out/references/swimlane.md"
 ]

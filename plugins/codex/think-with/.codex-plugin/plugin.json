@@ -1,11 +1,12 @@
 {
   "name": "think-with",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Things to think with",
   "author": {
     "name": "IamGroooooot"
   },
   "repository": "https://github.com/IamGroooooot/think-with",
+  "skills": "./skills/",
   "interface": {
     "displayName": "think-with",
     "shortDescription": "Things to think with",

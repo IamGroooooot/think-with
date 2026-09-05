@@ -1,0 +1,11 @@
+lay-out is a customized version of HumanLayer's show-me skill, adapted for
+compact, terminal-friendly visual explanations and evidence-based change views.
+
+Original skill:
+https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md
+
+Upstream revision inspected for attribution and license:
+3c2629142c5d437428269b1b722b08c0b87f574d
+
+Upstream copyright: Copyright (c) 2026 HumanLayer
+The upstream MIT license is preserved in LICENSE.

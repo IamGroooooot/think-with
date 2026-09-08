@@ -64,6 +64,16 @@ Optional Codex UI and MCP dependency metadata belongs in `codex.openai`;
 invocation policy belongs only in `invocation`. Never silently discard an
 existing host-specific field: adapt it deliberately or resolve the difference.
 
+Public skills may list Claude subagent definitions in `claude.agents`, an array
+of Markdown paths under `assets/agents/`. The generator bundles these files only
+with the Claude skill and also registers them in the plugin's `agents/` directory.
+Names must match filenames and be unique across the plugin. The supported fields
+are `name`, `description`, `model`, `effort`, and optional `disallowedTools` (an
+array of tool names). The first four and a nonempty prompt body are required.
+Definitions must be self-contained because their plugin copy has no skill-relative
+resource base. Explain how to register the bundled definitions when users install
+only the skill folder. Internal skills do not support this plugin-only option.
+
 ## Platform blocks
 
 Write a marker on a line by itself:

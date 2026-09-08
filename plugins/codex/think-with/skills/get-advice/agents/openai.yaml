@@ -1,0 +1,5 @@
+interface:
+  display_name: Get Advice
+  short_description: Research fields, expert advice, and verified evidence
+  default_prompt: Use $get-advice to find evidence-rich research fields useful to
+    my problem and consult grounded expert perspectives.

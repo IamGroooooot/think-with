@@ -151,8 +151,16 @@ def render_plugin(root, base, name, plugin, market, platform):
         }
     outputs = {f"{base}/.{platform}-plugin/plugin.json": json_bytes(manifest)}
     for skill in plugin["skills"]:
-        bundled = render_skill(root, root / "src/skills" / skill, platform)
+        source = root / "src/skills" / skill
+        bundled = render_skill(root, source, platform)
         outputs.update({f"{base}/skills/{skill}/{path}": content for path, content in bundled.items()})
+        if platform == "claude":
+            _, _, config = read_skill(root, source)
+            for path in config.get("claude", {}).get("agents", []):
+                destination = f"{base}/agents/{PurePosixPath(path).name}"
+                if destination in outputs:
+                    raise ValueError(f"duplicate Claude agent: {destination}")
+                outputs[destination] = bundled[path]
     return outputs
 
 
@@ -193,7 +201,14 @@ def render_skill(root, source, platform):
             metadata["disable-model-invocation"] = True
     bundled_files = {"SKILL.md": ("---\n" + yaml.safe_dump(metadata, sort_keys=False, allow_unicode=True)
                             + "---\n\n" + render_blocks(body, blocks)).encode()}
-    bundled_files.update(render_runtime_files(source, config, blocks))
+    runtime_config = dict(config)
+    if platform == "claude":
+        agents = platform_config.get("agents", [])
+        runtime_config["files"] = list(dict.fromkeys(config.get("files", []) + agents))
+    bundled_files.update(render_runtime_files(source, runtime_config, blocks))
+    if platform == "claude":
+        for path in agents:
+            validate_claude_agent(path, bundled_files[path])
     if platform == "codex":
         openai = require_table(platform_config.get("openai", {}), "codex.openai").copy()
         validate_allowed_keys(openai, {"interface", "dependencies"}, "codex.openai (invocation is configured separately)")
@@ -221,8 +236,29 @@ def read_skill(root, source):
     if invocation not in ("auto", "explicit"):
         raise ValueError(f"{source.name}: invocation must be auto or explicit")
     for target in PLATFORMS:
-        validate_allowed_keys(config.get(target, {}), {"blocks", "frontmatter"} if target == "claude" else {"blocks", "openai"}, target)
+        validate_allowed_keys(config.get(target, {}), {"blocks", "frontmatter", "agents"} if target == "claude" else {"blocks", "openai"}, target)
+    require_unique_strings(config.get("files", []), f"{source.name}.files")
+    agents = require_unique_strings(config.get("claude", {}).get("agents", []), "claude.agents")
+    if agents and source.parent != root / "src/skills":
+        raise ValueError("claude.agents requires a distributable skill")
+    for path in agents:
+        if not path.startswith("assets/agents/") or PurePosixPath(path).suffix != ".md":
+            raise ValueError("claude.agents must name Markdown files under assets/agents/")
     return metadata, body, config
+
+
+def validate_claude_agent(path, content):
+    metadata, body = parse_frontmatter(content.decode())
+    validate_allowed_keys(metadata, {"name", "description", "model", "effort", "disallowedTools"}, "Claude agent")
+    validate_name(metadata.get("name"))
+    if metadata["name"] != PurePosixPath(path).stem:
+        raise ValueError(f"{path}: agent name must match filename")
+    for key in ("description", "model"):
+        validate_nonempty_string(metadata.get(key), f"{path}.{key}")
+    if metadata.get("effort") not in {"low", "medium", "high", "xhigh", "max"}:
+        raise ValueError(f"{path}: invalid agent effort")
+    require_unique_strings(metadata.get("disallowedTools", []), f"{path}.disallowedTools")
+    validate_nonempty_string(body, f"{path} agent prompt")
 
 
 def read_blocks(root, selected, platform):

@@ -62,6 +62,68 @@ class PackagingTests(unittest.TestCase):
         metadata, _ = parse_frontmatter(render_skill(self.root, source, "claude")["SKILL.md"].decode())
         self.assertNotIn("disable-model-invocation", metadata)
 
+    def test_claude_agents_are_registered_and_bundled_without_codex_leakage(self):
+        source = self.create_agent_skill()
+        self.register_public_skills([source.name])
+        output = render_repository(self.root)
+        base = "plugins/claude/think-with"
+        definition = output[f"{base}/agents/sample-worker.md"]
+        self.assertEqual(definition, output[f"{base}/skills/sample/assets/agents/sample-worker.md"])
+        self.assertFalse(any("plugins/codex/" in path and "sample-worker" in path for path in output))
+        write_outputs(self.root, output)
+        (self.root / base / "agents/sample-worker.md").write_text("stale")
+        self.assertIn(f"changed: {base}/agents/sample-worker.md", output_differences(self.root, output))
+
+    def test_claude_agent_name_collisions_are_rejected_across_skills(self):
+        self.create_agent_skill("one")
+        self.create_agent_skill("two")
+        self.register_public_skills(["one", "two"])
+        with self.assertRaisesRegex(ValueError, "duplicate Claude agent"):
+            render_repository(self.root)
+
+    def test_claude_agent_configuration_rejects_unusable_definitions(self):
+        source = self.create_agent_skill()
+        agent = source / "assets/agents/sample-worker.md"
+        original = agent.read_text()
+        cases = [
+            (original.replace("name: sample-worker", "name: other"), "name must match"),
+            (original.replace("effort: low", "effort: invalid"), "invalid agent effort"),
+            (original.replace("model: claude-fable-5-1\n", ""), "model must be"),
+            (original.replace("disallowedTools: [Agent]", "hooks: {}"), "unsupported keys"),
+            (original.replace("disallowedTools: [Agent]", "disallowedTools: Agent"), "array"),
+            (original.replace("Inspect only the assigned evidence.", ""), "agent prompt"),
+        ]
+        for content, error in cases:
+            with self.subTest(error=error):
+                agent.write_text(content)
+                with self.assertRaisesRegex(ValueError, error):
+                    render_skill(self.root, source, "claude")
+        agent.unlink()
+        with self.assertRaisesRegex(ValueError, "missing source"):
+            render_skill(self.root, source, "claude")
+
+    def test_claude_agent_paths_and_internal_registration_are_rejected(self):
+        for index, path in enumerate(("../outside.md", "assets/agents/../outside.md", "references/worker.md")):
+            with self.subTest(path=path):
+                source = self.create_skill(name=f"case-{index}", config=f'[claude]\nagents = ["{path}"]\n')
+                with self.assertRaises(ValueError):
+                    render_skill(self.root, source, "claude")
+        source = self.create_skill(name="internal", internal=True,
+                                   config='[claude]\nagents = ["assets/agents/worker.md"]\n')
+        with self.assertRaisesRegex(ValueError, "distributable skill"):
+            render_skill(self.root, source, "claude")
+
+    def create_agent_skill(self, name="sample"):
+        source = self.create_skill(name=name, config='[claude]\nagents = ["assets/agents/sample-worker.md"]\n')
+        directory = source / "assets/agents"
+        directory.mkdir(parents=True)
+        (directory / "sample-worker.md").write_text(
+            "---\nname: sample-worker\ndescription: Check assigned evidence.\n"
+            "model: claude-fable-5-1\neffort: low\ndisallowedTools: [Agent]\n---\n"
+            "Inspect only the assigned evidence.\n"
+        )
+        return source
+
     def test_platform_metadata_and_override_do_not_leak(self):
         source = self.create_skill(body="{{tw:ask-user}}\n", config='''
 [claude.frontmatter]

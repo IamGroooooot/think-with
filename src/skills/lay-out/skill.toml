@@ -1,4 +1,4 @@
-invocation = "auto"
+invocation = "explicit"
 files = [
   "references/dfd.md",
   "references/sequence.md",

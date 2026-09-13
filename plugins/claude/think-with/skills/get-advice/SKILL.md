@@ -2,6 +2,7 @@
 name: get-advice
 description: Find relevant research, consult evidence-grounded experts, and verify
   advice for the user's situation.
+disable-model-invocation: true
 ---
 
 # Get advice

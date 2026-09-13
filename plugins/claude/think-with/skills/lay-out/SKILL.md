@@ -1,6 +1,7 @@
 ---
 name: lay-out
 description: Show a topic with the smallest useful view; avoid unneeded artifacts.
+disable-model-invocation: true
 ---
 
 Show the current topic with the smallest views that preserve the important relationship. Keep prose brief.

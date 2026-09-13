@@ -1,4 +1,4 @@
-invocation = "auto"
+invocation = "explicit"
 files = [
   "references/discovery.md",
   "references/expert-briefing.md",

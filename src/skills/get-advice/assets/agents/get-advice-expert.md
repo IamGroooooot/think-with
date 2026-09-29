@@ -1,7 +1,7 @@
 ---
 name: get-advice-expert
 description: Investigate one research perspective when the get-advice coordinator supplies a bounded expert brief.
-model: claude-fable-5-1
+model: claude-opus-5-5
 effort: low
 disallowedTools: [Agent]
 ---

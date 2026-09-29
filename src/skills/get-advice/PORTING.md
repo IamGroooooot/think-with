@@ -20,6 +20,10 @@ The source skill had no working-tree changes when inspected.
   the input skill. No original legal notices were present or removed; no new
   license was assigned. No other skill or source repository is a runtime dependency.
 
+- Later model update (plugin 0.1.4): experts use Astra low / Opus 5.5 low and
+  checkers use GPT-6 Sol xhigh / Sonnet 5.5 medium. The checks below record the
+  original port's Fable 5.1, Opus 5, and Luna settings.
+
 ## Checks run
 
 Validated with Claude Code 2.1.263 and Codex CLI 0.153.4.

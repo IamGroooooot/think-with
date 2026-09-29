@@ -1,7 +1,7 @@
 ---
 name: get-advice-checker
 description: Independently verify an assigned draft claim bundle for the get-advice coordinator.
-model: claude-opus-5
+model: claude-sonnet-5-5
 effort: medium
 disallowedTools: [Agent]
 ---

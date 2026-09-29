@@ -27,7 +27,7 @@ Explain what the advice changes, with evidence, applicability limits, and checke
 
 Read [fact-checking](references/fact-check.md) to prepare the evidence handoff. Group material claims, sources, and context by dependency; send independent bundles in parallel to fresh checkers. One suffices for a short answer.
 
-Use native `spawn_agent` calls with `model = "gpt-5.6-luna"`, `reasoning_effort = "xhigh"`, and `fork_turns = "none"`. Pass each checker only its assigned evidence bundle.
+Use native `spawn_agent` calls with `model = "gpt-6-sol"`, `reasoning_effort = "xhigh"`, and `fork_turns = "none"`. Pass each checker only its assigned evidence bundle.
 Correct errors, exaggeration, and leaps from the checks; recheck only new material claims or unresolved conflicts. Disclose unavailable or unfinished research, delegation, or checking; never invent completion.
 
 ## Runtime

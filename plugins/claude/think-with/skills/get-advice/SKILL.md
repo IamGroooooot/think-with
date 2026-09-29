@@ -20,7 +20,7 @@ Read [discovery](references/discovery.md) when starting research. Select fields 
 
 The coordinator owns discovery through final delivery, including when delegated the entire consultation. Consult the fewest useful, distinct perspectives with fresh native subagents and parallelize independent work.
 
-Use fresh `Agent` calls with the bundled `get-advice-expert` type: Claude Fable 5.1, low effort. Pass each expert only its self-contained brief.
+Use fresh `Agent` calls with the bundled `get-advice-expert` type: Claude Opus 5.5, low effort. Pass each expert only its self-contained brief.
 Read [briefing and synthesis](references/expert-briefing.md) when delegating. Experts investigate independently, may reject an unsuitable field, and must not delegate.
 Explain what the advice changes, with evidence, applicability limits, and checked learning resources. Separate findings, user facts, and inference. Detail implementation only on request; label small tests as proposals without promised effects.
 
@@ -28,7 +28,7 @@ Explain what the advice changes, with evidence, applicability limits, and checke
 
 Read [fact-checking](references/fact-check.md) to prepare the evidence handoff. Group material claims, sources, and context by dependency; send independent bundles in parallel to fresh checkers. One suffices for a short answer.
 
-Use fresh `Agent` calls with the bundled `get-advice-checker` type: Claude Opus 5, medium effort. Pass each checker only its assigned evidence bundle.
+Use fresh `Agent` calls with the bundled `get-advice-checker` type: Claude Sonnet 5.5, medium effort. Pass each checker only its assigned evidence bundle.
 Correct errors, exaggeration, and leaps from the checks; recheck only new material claims or unresolved conflicts. Disclose unavailable or unfinished research, delegation, or checking; never invent completion.
 
 ## Runtime

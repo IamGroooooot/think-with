@@ -14,4 +14,4 @@
 
 Codex에서는 `$get-advice`, Claude Code 플러그인에서는 `/think-with:get-advice`로 호출합니다.
 
-Codex 기준으로 전문가 자문에는 GPT-6 Astra(low), 사실 검증에는 GPT-5.6 Luna(xhigh)를 별도로 호출합니다. 여러 에이전트가 조사와 검증을 수행하므로 **토큰 소모가 클 수 있습니다.**
+Codex 기준으로 전문가 자문에는 GPT-6 Astra(low), 사실 검증에는 GPT-6 Sol(xhigh)을 별도로 호출합니다. Claude Code에서는 각각 Claude Opus 5.5(low)와 Claude Sonnet 5.5(medium)를 사용합니다. 여러 에이전트가 조사와 검증을 수행하므로 **토큰 소모가 클 수 있습니다.**

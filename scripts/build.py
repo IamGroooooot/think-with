@@ -26,6 +26,7 @@ CLAUDE_FIELDS = {
 }
 EXCLUDED = {".git", ".github", ".venv", "__pycache__", "node_modules", "evals", "evaluations"}
 LEGAL = re.compile(r"(?:LICENSE|LICENCE|NOTICE|COPYING|AUTHORS|COPYRIGHT)(?:\.[^/]+)?$")
+EVAL_SUITE = re.compile(r"evals(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?")
 
 
 def main():
@@ -161,6 +162,32 @@ def render_plugin(root, base, name, plugin, market, platform):
                 if destination in outputs:
                     raise ValueError(f"duplicate Claude agent: {destination}")
                 outputs[destination] = bundled[path]
+    if platform == "claude":
+        outputs.update({f"{base}/{path}": content for path, content in render_evals(root, name).items()})
+    return outputs
+
+
+def render_evals(root, plugin):
+    """Copy a plugin's eval suites from src/evals/<plugin> for `claude plugin eval`."""
+    source = safe_path(root, f"src/evals/{plugin}")
+    if not source.exists():
+        return {}
+    outputs = {}
+    for path in sorted(source.rglob("*")):
+        relative = path.relative_to(source).as_posix()
+        if path.is_symlink():
+            raise ValueError(f"symlink must be materialized first: {path}")
+        if path.name == ".DS_Store":
+            continue
+        suite, *rest = PurePosixPath(relative).parts
+        if suite == "calibration" and (rest or path.is_dir()):
+            continue  # Human grading records for judge calibration stay in the source tree.
+        if not (path.is_dir() or rest) or not EVAL_SUITE.fullmatch(suite):
+            raise ValueError(f"eval sources must be inside evals/, evals-<name>/, or calibration/: src/evals/{plugin}/{relative}")
+        if rest[:1] == ["results"]:
+            raise ValueError(f"eval results are run output, not source: src/evals/{plugin}/{relative}")
+        if path.is_file():
+            outputs[relative] = path.read_bytes()
     return outputs
 
 
@@ -381,9 +408,17 @@ def unexpected_plugin_files(root, outputs, previous):
         directory = safe_path(root, base)
         for path in directory.rglob("*"):
             relative = path.relative_to(root).as_posix()
+            if is_eval_result(base, relative):
+                continue
             if path.is_symlink() or (path.is_file() and relative not in owned):
                 found.append(relative)
     return found
+
+
+def is_eval_result(base, relative):
+    # `claude plugin eval` writes run output into <suite>/results/; it is local state, not package content.
+    parts = PurePosixPath(relative).relative_to(base).parts
+    return base.startswith("plugins/claude/") and len(parts) > 2 and EVAL_SUITE.fullmatch(parts[0]) is not None and parts[1] == "results"
 
 
 def read_owned_paths(root):

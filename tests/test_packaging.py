@@ -295,6 +295,45 @@ display_name = "Sample"
         with self.assertRaisesRegex(ValueError, "unowned"):
             write_outputs(self.root, output)
 
+    def test_eval_suite_is_generated_for_claude_and_run_results_stay_local(self):
+        case = self.root / "src/evals/think-with/evals/01-case"
+        (case / "graders").mkdir(parents=True)
+        (case / "prompt.md").write_text("Explain the change.\n")
+        (case / "graders/criteria.md").write_text("The answer names the change.\n")
+        holdout = self.root / "src/evals/think-with/evals-holdout/h1-case"
+        holdout.mkdir(parents=True)
+        (holdout / "prompt.md").write_text("Explain another change.\n")
+        calibration = self.root / "src/evals/think-with/calibration/pilot"
+        calibration.mkdir(parents=True)
+        (calibration / "user-grades.txt").write_text("01A relation=O\n")
+        output = render_repository(self.root)
+        self.assertFalse(any("calibration" in path for path in output))
+        self.assertIn("plugins/claude/think-with/evals/01-case/prompt.md", output)
+        self.assertIn("plugins/claude/think-with/evals-holdout/h1-case/prompt.md", output)
+        self.assertIn("plugins/claude/think-with/evals/01-case/graders/criteria.md", output)
+        self.assertFalse(any(path.startswith("plugins/codex/think-with/evals/") for path in output))
+        write_outputs(self.root, output)
+        result = self.root / "plugins/claude/think-with/evals/results/run/aggregate-result.json"
+        result.parent.mkdir(parents=True)
+        result.write_text("{}")
+        self.assertEqual(output_differences(self.root, output), [])
+        write_outputs(self.root, output)
+        self.assertTrue(result.exists())
+        codex_result = self.root / "plugins/codex/think-with/evals/results/run.json"
+        codex_result.parent.mkdir(parents=True)
+        codex_result.write_text("{}")
+        self.assertIn("unowned: plugins/codex/think-with/evals/results/run.json", output_differences(self.root, output))
+        codex_result.unlink()
+        stray = self.root / "src/evals/think-with/notes.md"
+        stray.write_text("Draft\n")
+        with self.assertRaisesRegex(ValueError, "inside evals/"):
+            render_repository(self.root)
+        stray.unlink()
+        (self.root / "src/evals/think-with/evals/results").mkdir()
+        (self.root / "src/evals/think-with/evals/results/run.json").write_text("{}")
+        with self.assertRaisesRegex(ValueError, "run output"):
+            render_repository(self.root)
+
     def test_forged_ownership_cannot_delete_source_files(self):
         (self.root / INDEX).write_text(json.dumps(["catalog.toml"]))
         with self.assertRaisesRegex(ValueError, "ownership"):

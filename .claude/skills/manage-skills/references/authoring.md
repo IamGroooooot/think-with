@@ -109,6 +109,16 @@ Build outputs are ordinary files below `plugins/claude/<plugin>` and
 skill directories. Each skill contains its own runtime dependencies. Neither
 the repository root nor another installed skill is a runtime resource path.
 
+Eval suites for `claude plugin eval` live in `src/evals/<plugin>/evals/` or
+`src/evals/<plugin>/evals-<name>/`. The build copies them unchanged into the
+Claude package only, where the eval command expects them below the plugin.
+Author or change cases in the package copy only transiently, for example
+during `claude plugin eval init`, then move them back to `src/evals` before
+building. Run output under `<suite>/results/` is local, gitignored, and never
+accepted as source. Keep human grading records that calibrate LLM judges in
+`src/evals/<plugin>/calibration/`; they stay in the source tree and are not
+packaged.
+
 Use a numeric MAJOR.MINOR.PATCH release version in the catalog. Both generated
 plugin manifests receive that value; the Claude marketplace does not repeat
 it. Add new plugin tables to extend the catalog rather than adding special

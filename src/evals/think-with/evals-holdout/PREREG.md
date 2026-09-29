@@ -31,3 +31,4 @@ If the per-case SD of the paired difference is similar to the baseline's (≈ 0.
 
 ## Amendments
 - 2026-09-29, after the held-out run: the h3 `sight-insight` expected insight named a second violating edge, apps/web → db, that the h3 prompt does not contain. That edge was removed from the grader. The pre-registered h3 `sight-insight` results are invalid for every arm.
+- 2026-09-29, after the held-out run: the `ink-boilerplate` regex missed variants such as "해당 없습니다", "No files were changed" and "Nothing in the repo changed". It was widened in all 10 cases. Re-scored on the saved answers, hypothesis 1 still holds: 0.1.4 fires in 6 of 9 runs on 03–05 (previously counted 5) and 9 of 9 on h2–h4 (previously 5); the candidate fires in 0 of 9 on both. The widened pattern matches no answer on 01, 02, 06 or h1, and no answer without the plugin.

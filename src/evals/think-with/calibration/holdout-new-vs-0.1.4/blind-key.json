@@ -1,0 +1,32 @@
+{
+ "01": {
+  "case": "h1-diff-auth-middleware",
+  "run": 2,
+  "A": "0.1.4",
+  "B": "new"
+ },
+ "02": {
+  "case": "h2-concept-pkce-bff",
+  "run": 0,
+  "A": "new",
+  "B": "0.1.4"
+ },
+ "03": {
+  "case": "h3-deps-layer-violation",
+  "run": 1,
+  "A": "new",
+  "B": "0.1.4"
+ },
+ "04": {
+  "case": "h4-process-deploy-handoffs",
+  "run": 0,
+  "A": "new",
+  "B": "0.1.4"
+ },
+ "05": {
+  "case": "05-deps-cycle",
+  "run": 2,
+  "A": "0.1.4",
+  "B": "new"
+ }
+}

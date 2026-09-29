@@ -1,9 +1,9 @@
 invocation = "explicit"
 files = [
+  "references/dependencies.md",
   "references/dfd.md",
   "references/sequence.md",
   "references/structural-diff.md",
-  "references/swimlane.md",
 ]
 
 [origin]

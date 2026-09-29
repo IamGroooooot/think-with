@@ -1,0 +1,46 @@
+# Input to blind_round.py build (internal skill blind-grade), run from the repository root.
+package = "plugins/claude/think-with"
+seed = 20260929
+intro = "케이스마다 두 답변을 A와 B로 무작위로 배치했습니다. 두 답변 모두 플러그인을 설치한 상태의 답변이고, 하나는 lay-out 수정안 r2, 다른 하나는 0.1.4입니다. 답변 본문은 수정하지 않았습니다."
+
+# label = result folder under <suite>/results/, with ":without" for the no-plugin arm of a with-without run.
+[arms]
+r2 = "r2"
+"0.1.4" = "0.1.4"
+
+# run is the 0-based run index. h3 uses run 2 because 0.1.4's h3 run 1 was graded in evals-holdout-r1-vs-0.1.4.
+[[pairs]]
+case = "f1-diff-retry-policy"
+suite = "evals-holdout2"
+run = 1
+summary = "머지 전 PR: 외부 API 호출을 공통 재시도 정책으로 모음 (Python)"
+
+[[pairs]]
+case = "f2-deps-ports-adapters"
+suite = "evals-holdout2"
+run = 1
+summary = "포트와 어댑터 구조 파이썬 패키지 11개의 의존 구조 (영어)"
+
+[[pairs]]
+case = "f3-flow-pii-phone"
+suite = "evals-holdout2"
+run = 1
+summary = "사용자 전화번호가 어디로 흘러가 어디에 저장되나"
+
+[[pairs]]
+case = "f4-timeline-duplicate-email"
+suite = "evals-holdout2"
+run = 1
+summary = "월 청구 메일이 두 번 가는 이유 (영어)"
+
+[[pairs]]
+case = "h1-diff-auth-middleware"
+suite = "evals-holdout"
+run = 1
+summary = "머지 전 PR: 인증 처리를 라우트별 호출에서 미들웨어로 옮김 (TS)"
+
+[[pairs]]
+case = "h3-deps-layer-violation"
+suite = "evals-holdout"
+run = 2
+summary = "모노레포 12개 패키지의 의존 구조 (계층 위반 있음, 영어)"

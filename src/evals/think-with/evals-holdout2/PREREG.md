@@ -23,19 +23,19 @@ Ship revision 2 only if all hold:
 2. No revision 2 answer is graded X where the paired 0.1.4 answer is O.
 3. Revision 2 does not lose h1 or h3.
 
-Otherwise keep 0.1.4, plus only the boilerplate change, which lost nothing in round 2.
+Otherwise keep 0.1.4, plus only the boilerplate change, which lost nothing in `calibration/evals-holdout-r1-vs-0.1.4`.
 
 ## Secondary (triage, not a ship criterion)
 - A pairwise judge compares diagrams only, runs in both orders, and counts a win only when both orders agree. Its model is chosen from its agreement with the user's 10 graded pairs in `calibration/`, before any answer here is seen. It flags pairs for the user. It does not decide.
 - Regex checks and `ink-prose` must not drop by more than 1 of 3 runs per case against 0.1.4.
-- `sight-insight` is reported but not trusted. It passed both answers the user rejected in round 2.
+- `sight-insight` is reported but not trusted. It passed both answers the user rejected in `evals-holdout-r1-vs-0.1.4`.
 
 ## Amendments
-- 2026-09-29, before any answer in this suite was seen: the user already graded 0.1.4's h3 run 1 in round 2. For h3, both arms use run 2 so the user sees no answer twice. h1 keeps run 1, which they have not seen. "Run n" is the 0-based index, as in `calibration/*/blind-key.json`.
-- 2026-09-29, before any answer in this suite was seen: pairwise-judge calibration on the 10 graded pairs came out at 3/10 for both Sonnet and Opus (diagrams only, both orders). A layout-flattening check shows the text judge does perceive alignment (5/5). So the disagreement is about criteria, not perception. A variant also saw the full answers plus the user's taste notes, taken from memos written before round 2. Tested on round 2, it matched 0 of the 3 pairs where the user preferred one answer, and it again preferred the compressed candidate answers. The pairwise judge is reported only as exploratory and does not select pairs.
+- 2026-09-29, before any answer in this suite was seen: the user already graded 0.1.4's h3 run 1 in `evals-holdout-r1-vs-0.1.4`. For h3, both arms use run 2 so the user sees no answer twice. h1 keeps run 1, which they have not seen. "Run n" is the 0-based index, as in `calibration/*/blind-key.json`.
+- 2026-09-29, before any answer in this suite was seen: pairwise-judge calibration on the 10 graded pairs came out at 3/10 for both Sonnet and Opus (diagrams only, both orders). A layout-flattening check shows the text judge does perceive alignment (5/5). So the disagreement is about criteria, not perception. A variant also saw the full answers plus the user's taste notes, taken from memos written before `evals-holdout-r1-vs-0.1.4`. Tested on that round, it matched 0 of the 3 pairs where the user preferred one answer, and it again preferred the compressed candidate answers. The pairwise judge is reported only as exploratory and does not select pairs.
 
 ## Result (2026-09-29)
-The user graded the six pairs blind (`calibration/holdout2-r2-vs-0.1.4/user-grades.txt`). Unblinded:
+The user graded the six pairs blind (`calibration/evals-holdout2-r2-vs-0.1.4/user-grades.txt`). Unblinded:
 
 | Pair | Case | Revision 2 (relation, waste) | 0.1.4 (relation, waste) | Preferred |
 |---|---|---|---|---|
@@ -50,7 +50,7 @@ The user graded the six pairs blind (`calibration/holdout2-r2-vs-0.1.4/user-grad
 2. No answer was graded X. Holds.
 3. Revision 2 won h1 and h3. Holds.
 
-Decision: ship revision 2.
+Decision: ship revision 2, released as 0.1.5.
 
 Exploratory, run after grading: the Sonnet pairwise judge (diagrams only, both orders) agreed with the user's preference on 5 of 6 pairs. It picked revision 2 on f2, where the user called a tie. With the earlier 3/10, that makes 8 of 16. This round's winners were also the more compressed answers, which the judge already favored, so this is not evidence that the judge tracks the user.
 
@@ -58,3 +58,5 @@ The user's notes point to the next revision; revision 2 was not changed after gr
 - f2: the user found 0.1.4's drawn layer graph more intuitive than revision 2's adjacency lists. In revision 2's reach paths such as `api → services → domain → infra/sql ✗`, they wanted the violating edge itself marked, not just the end of the path.
 - f4: 0.1.4's answer "visualizes better". It had a four-participant sequence plus a hold-versus-work bar chart. Revision 2 had a three-participant sequence and a short busy-time strip.
 - h1: in the file tree, use common status letters such as `M` and `A` in place of Korean words.
+
+The f1–f4 answers have now been seen, so these cases are development cases too. The next candidate needs a new holdout suite.

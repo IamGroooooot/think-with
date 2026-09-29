@@ -117,7 +117,8 @@ during `claude plugin eval init`, then move them back to `src/evals` before
 building. Run output under `<suite>/results/` is local, gitignored, and never
 accepted as source. Keep human grading records that calibrate LLM judges in
 `src/evals/<plugin>/calibration/`; they stay in the source tree and are not
-packaged.
+packaged. The internal `blind-grade` skill runs a graded round and names run
+output and round folders.
 
 Use a numeric MAJOR.MINOR.PATCH release version in the catalog. Both generated
 plugin manifests receive that value; the Claude marketplace does not repeat

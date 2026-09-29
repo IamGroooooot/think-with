@@ -1,0 +1,47 @@
+{
+ "01": {
+  "case": "01-diff-add-cache",
+  "A": "0.1.4",
+  "B": "none",
+  "run": {
+   "0.1.4": 0,
+   "none": 0
+  }
+ },
+ "02": {
+  "case": "02-diff-sync-to-queue",
+  "A": "none",
+  "B": "0.1.4",
+  "run": {
+   "none": 0,
+   "0.1.4": 0
+  }
+ },
+ "04": {
+  "case": "04-concept-lock-compare",
+  "A": "none",
+  "B": "0.1.4",
+  "run": {
+   "none": 0,
+   "0.1.4": 0
+  }
+ },
+ "05": {
+  "case": "05-deps-cycle",
+  "A": "0.1.4",
+  "B": "none",
+  "run": {
+   "0.1.4": 0,
+   "none": 0
+  }
+ },
+ "06": {
+  "case": "06-mixed-intents",
+  "A": "0.1.4",
+  "B": "none",
+  "run": {
+   "0.1.4": 0,
+   "none": 0
+  }
+ }
+}

@@ -4,7 +4,7 @@ Written 2026-09-29, before the skill is edited or any held-out case is run.
 
 ## Frozen
 - Judge: `--judge-model sonnet`, 3 votes. Grader texts are the ones in `evals/` and `evals-holdout/` at this commit.
-- Baseline: plugin 0.1.4, full run `evals/results/2026-09-29T10-59-42-291Z`.
+- Baseline: plugin 0.1.4, full run `evals/results/2026-09-29T10-59-42-291Z` (later renamed `evals/results/0.1.4`).
 - Held-out cases: `evals-holdout/h1..h4`. Each is run once on the candidate (with and without the plugin) and once on 0.1.4 (with the plugin only). Nothing is tuned on them.
 
 ## Candidate changes
@@ -32,3 +32,6 @@ If the per-case SD of the paired difference is similar to the baseline's (≈ 0.
 ## Amendments
 - 2026-09-29, after the held-out run: the h3 `sight-insight` expected insight named a second violating edge, apps/web → db, that the h3 prompt does not contain. That edge was removed from the grader. The pre-registered h3 `sight-insight` results are invalid for every arm.
 - 2026-09-29, after the held-out run: the `ink-boilerplate` regex missed variants such as "해당 없습니다", "No files were changed" and "Nothing in the repo changed". It was widened in all 10 cases. Re-scored on the saved answers, hypothesis 1 still holds: 0.1.4 fires in 6 of 9 runs on 03–05 (previously counted 5) and 9 of 9 on h2–h4 (previously 5); the candidate fires in 0 of 9 on both. The widened pattern matches no answer on 01, 02, 06 or h1, and no answer without the plugin.
+
+## Outcome (2026-09-29)
+All five hypotheses held, but the user's blind comparison (`calibration/evals-holdout-r1-vs-0.1.4`) went against this candidate, labeled r1: 0 wins, 2 losses (h1, h3), 3 ties. r1 was not shipped. h1 and h3 were inspected to diagnose the losses and are development cases now. Revision 2 is pre-registered in `evals-holdout2/PREREG.md`.

@@ -1,0 +1,388 @@
+<title>{{ROUND}} 블라인드 채점</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a grading sheet. Each pair is a two-column spread (A | B) with the grade strips aligned beneath both answers and one verdict bar across; it stacks to one column on phones. */
+:root {
+  --bg: #EFF1EE;
+  --surface: #FFFFFF;
+  --code: #F6F7F4;
+  --ink: #1A1F23;
+  --muted: #5B6570;
+  --line: #D5DAD4;
+  --accent: #2450B5;
+  --accent-soft: #E3EAF8;
+  --on-accent: #FFFFFF;
+  --done: #2B7A4B;
+  --partial: #9C650F;
+  --add-bg: #DDF4E3;
+  --add-ink: #145C2C;
+  --del-bg: #FBE3E3;
+  --del-ink: #9A1F24;
+  --hunk-ink: #6B4FB0;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --mono: Menlo, "SF Mono", ui-monospace, Consolas, "DejaVu Sans Mono", monospace;
+  --gutter: clamp(16px, 3vw, 40px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121518; --surface: #1A1E22; --code: #111417; --ink: #E4E7E5; --muted: #98A1A9; --line: #2D3339;
+    --accent: #86A7F2; --accent-soft: #1E2942; --on-accent: #0C1426; --done: #62C08A; --partial: #E2AA4D;
+    --add-bg: #133D22; --add-ink: #8BE0A6; --del-bg: #4A1719; --del-ink: #FFA3A3; --hunk-ink: #B9A4F2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121518; --surface: #1A1E22; --code: #111417; --ink: #E4E7E5; --muted: #98A1A9; --line: #2D3339;
+  --accent: #86A7F2; --accent-soft: #1E2942; --on-accent: #0C1426; --done: #62C08A; --partial: #E2AA4D;
+  --add-bg: #133D22; --add-ink: #8BE0A6; --del-bg: #4A1719; --del-ink: #FFA3A3; --hunk-ink: #B9A4F2;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 1440px; margin: 0 auto; padding-inline: var(--gutter); }
+
+/* Top bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding-block: 10px; }
+.bar .brand { font-weight: 600; font-size: 14px; }
+.nav { display: flex; gap: 6px; flex-wrap: wrap; }
+.navchip { font-family: var(--mono); font-size: 13px; text-decoration: none; color: var(--ink); border: 1px solid var(--line); background: var(--surface); padding: 3px 10px; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.navchip[data-state="partial"] { border-color: var(--partial); color: var(--partial); }
+.navchip[data-state="done"] { background: var(--done); border-color: var(--done); color: var(--surface); }
+.bar .progress { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar .save { margin-left: auto; font-size: 13px; color: var(--muted); }
+.bar .save[data-kind="error"] { color: var(--partial); }
+.bar .tolink { font-size: 13px; color: var(--accent); }
+
+/* Intro */
+.intro { padding-block: 28px 8px; display: grid; gap: 14px; }
+.eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font-size: 26px; line-height: 1.25; margin: 0; text-wrap: balance; font-weight: 700; }
+.intro p { margin: 0; max-width: 68ch; }
+.lede { display: grid; gap: 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13.5px; color: var(--muted); padding: 0; margin: 0; list-style: none; }
+.legend b { color: var(--ink); font-weight: 600; margin-right: 4px; }
+
+/* Pair */
+.pair { padding-block: 36px 8px; scroll-margin-top: 64px; }
+.phead { display: flex; align-items: flex-start; gap: 14px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); margin-bottom: 18px; }
+.pnum { font-family: var(--mono); font-size: 28px; font-weight: 700; line-height: 1; padding-top: 2px; }
+.pmeta { flex: 1; min-width: 0; }
+.question { margin: 0; font-size: 17px; font-weight: 600; text-wrap: balance; }
+.case { margin: 2px 0 0; font-family: var(--mono); font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
+.state { font-size: 12.5px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.state[data-state="partial"] { border-color: var(--partial); color: var(--partial); }
+.state[data-state="done"] { border-color: var(--done); background: var(--done); color: var(--surface); }
+
+.spread { display: grid; gap: 14px 22px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "ansA" "grdA" "ansB" "grdB"; }
+@media (min-width: 1000px) {
+  .spread { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "ansA ansB" "grdA grdB"; }
+}
+.answer { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
+.ahead { padding: 10px 18px; border-bottom: 1px solid var(--line); }
+.tag { font-family: var(--mono); font-weight: 700; font-size: 15px; }
+.tag.small { font-size: 13px; color: var(--muted); }
+
+/* Rendered answer */
+.md { padding: 6px 18px 16px; font-size: 14.5px; line-height: 1.62; min-width: 0; }
+.md > * { margin-block: 12px 0; }
+.md h1, .md h2, .md h3 { font-size: 15.5px; line-height: 1.4; margin-block: 18px 0; font-weight: 700; }
+.md h1 { font-size: 17px; }
+.md p { margin-block: 10px 0; }
+.md ul, .md ol { padding-left: 1.3em; margin-block: 10px 0; }
+.md li + li { margin-top: 4px; }
+.md code { font-family: var(--mono); font-size: 0.88em; background: var(--code); border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; }
+.md .fence { position: relative; background: var(--code); border: 1px solid var(--line); border-radius: 4px; margin-block: 12px 0; }
+.md .fence .lang { position: absolute; top: 4px; right: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+/* diff fences: one block per line so added and removed rows get a full-width band, as in a terminal diff. */
+.md .fence.diff pre { padding-inline: 0; }
+.md .fence.diff code { display: inline-block; min-width: 100%; }
+.md .dl { display: block; min-height: 1.2em; padding-inline: 14px; }
+.md .dl.add { background: var(--add-bg); color: var(--add-ink); }
+.md .dl.del { background: var(--del-bg); color: var(--del-ink); }
+.md .dl.hunk { color: var(--hunk-ink); }
+.md pre { margin: 0; padding: 12px 14px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.2; white-space: pre; tab-size: 8; }
+.md pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+.md .c1, .md .c2 { display: inline-block; text-align: center; vertical-align: baseline; overflow: visible; }
+.md .c1 { width: 1ch; }
+.md .c2 { width: 2ch; }
+.md .c2 i { font-style: normal; font-size: 1.12em; line-height: 1; }
+.md .tw { overflow-x: auto; margin-block: 12px 0; }
+.md table { border-collapse: collapse; font-size: 13.5px; line-height: 1.45; }
+.md th, .md td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
+.md th { background: var(--code); font-weight: 600; }
+.md strong { font-weight: 700; }
+
+/* Grade strips */
+.grades { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
+.field { display: flex; align-items: center; gap: 8px; }
+.flabel { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.02em; }
+.chips { display: inline-flex; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.chip { position: relative; cursor: pointer; }
+.chip + .chip { border-left: 1px solid var(--line); }
+.chip input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.chip span { display: block; min-width: 38px; padding: 5px 10px; text-align: center; font-family: var(--mono); font-size: 14px; font-weight: 600; background: var(--surface); color: var(--ink); }
+.chip:hover span { background: var(--accent-soft); }
+.chip input:checked + span { background: var(--accent); color: var(--on-accent); }
+.chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: -3px; }
+.memo { flex: 1 1 260px; min-width: 0; }
+.memo input { flex: 1; min-width: 0; font: inherit; font-size: 14px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.memo input:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+
+.verdict { display: flex; justify-content: center; margin-top: 16px; padding: 14px; border: 1px dashed var(--line); border-radius: 6px; }
+.verdict .flabel { font-size: 14px; color: var(--ink); }
+.verdict .chip span { min-width: 64px; padding: 7px 14px; font-family: var(--sans); font-size: 15px; }
+
+/* Export */
+.export { padding-block: 44px 64px; display: grid; gap: 12px; scroll-margin-top: 64px; }
+.export h2 { font-size: 19px; margin: 0; }
+.export p { margin: 0; max-width: 68ch; color: var(--muted); }
+.export .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.export pre { margin: 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.5; }
+button.copy { font: inherit; font-size: 14px; font-weight: 600; padding: 7px 16px; border-radius: 5px; border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); cursor: pointer; }
+button.copy:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.copied { font-size: 13px; color: var(--done); }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="bar">
+  <div class="wrap">
+    <span class="brand">{{ROUND}}</span>
+    <nav class="nav" aria-label="쌍 이동">{{NAV}}</nav>
+    <span class="progress" id="progress">0/{{COUNT}} 쌍 완료</span>
+    <a class="tolink" href="#export">결과 텍스트</a>
+    <span class="save" id="save" data-kind="local">저장 준비 중</span>
+  </div>
+</div>
+
+<main class="wrap">
+  <header class="intro">
+    <p class="eyebrow">think-with · blind-grade</p>
+    <h1>답변 {{COUNT}}쌍 블라인드 채점</h1>
+    <div class="lede">{{INTRO}}</div>
+    <p>코드 블록은 터미널처럼 한글을 두 칸 폭으로 맞춰 보여 줍니다.</p>
+    <ul class="legend">
+      <li><b>관계</b>O 정확히 보임 · △ 애써야 보임 · X 틀렸거나 안 보임</li>
+      <li><b>낭비</b>0 없음 · 1 약간 · 2 뚜렷함</li>
+      <li><b>형태</b>O 맞는 형태 · X 안 맞음 (선택)</li>
+      <li><b>더 나은 답변</b>A · 같음 · B</li>
+    </ul>
+    <p>선택한 칩을 다시 누르면 선택이 지워집니다. 채점은 입력하는 대로 저장되니, 끝나면 Claude에게 알려 주세요.</p>
+  </header>
+
+{{SECTIONS}}
+
+  <section class="export" id="export">
+    <h2>채점 결과 (user-grades.txt 형식)</h2>
+    <p>Claude는 저장된 채점을 직접 읽습니다. 상단에 "이 브라우저에만 저장됨"이 보이면 아래 텍스트를 복사해 대화에 붙여 넣어 주세요.</p>
+    <div class="row"><button class="copy" id="copy" type="button">텍스트 복사</button><span class="copied" id="copied" hidden>복사했습니다</span></div>
+    <pre id="out"></pre>
+  </section>
+</main>
+
+<script>
+(() => {
+  const PAIRS = {{PAIRS}}.map((id) => ({ id }));
+  const KEY = {{STORE_KEY}};
+  const blankSide = () => ({ rel: "", waste: "", form: "", memo: "" });
+  const blank = () => ({ A: blankSide(), B: blankSide(), better: "" });
+  const str = (v) => (typeof v === "string" ? v : "");
+  const normalize = (d) => {
+    const n = blank();
+    if (!d || typeof d !== "object") return n;
+    for (const s of ["A", "B"]) {
+      const g = d[s] && typeof d[s] === "object" ? d[s] : {};
+      for (const f of ["rel", "waste", "form", "memo"]) n[s][f] = str(g[f]);
+    }
+    n.better = str(d.better);
+    return n;
+  };
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+  const state = {};
+  for (const p of PAIRS) state[p.id] = blank();
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (saved) for (const id in saved) if (state[id]) state[id] = normalize(saved[id]);
+  } catch (e) {}
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const radioValue = (name) => { const el = $(`input[name="${name}"]:checked`); return el ? el.value : ""; };
+  const setRadio = (name, value) => {
+    for (const el of document.querySelectorAll(`input[name="${name}"]`)) el.checked = el.value === value;
+  };
+
+  function readDom(id) {
+    const d = blank();
+    for (const s of ["A", "B"]) {
+      for (const f of ["rel", "waste", "form"]) d[s][f] = radioValue(`${id}${s}-${f}`);
+      d[s].memo = $(`#${CSS.escape(id + s)}-memo`).value.replace(/\s+/g, " ").trim();
+    }
+    d.better = radioValue(`${id}-better`);
+    return d;
+  }
+  function writeDom(id) {
+    const d = state[id];
+    for (const s of ["A", "B"]) {
+      for (const f of ["rel", "waste", "form"]) setRadio(`${id}${s}-${f}`, d[s][f]);
+      const memo = $(`#${CSS.escape(id + s)}-memo`);
+      if (document.activeElement !== memo && memo.value.replace(/\s+/g, " ").trim() !== d[s].memo) memo.value = d[s].memo;
+    }
+    setRadio(`${id}-better`, d.better);
+  }
+
+  function pairState(d) {
+    const req = [d.A.rel, d.A.waste, d.B.rel, d.B.waste, d.better];
+    if (req.every(Boolean)) return "done";
+    const any = req.some(Boolean) || d.A.form || d.B.form || d.A.memo || d.B.memo;
+    return any ? "partial" : "empty";
+  }
+  const STATE_LABEL = { done: "채점 완료", partial: "채점 중", empty: "미채점" };
+
+  function exportText() {
+    const lines = [];
+    for (const p of PAIRS) {
+      const d = state[p.id];
+      for (const s of ["A", "B"]) {
+        const g = d[s];
+        lines.push(`${p.id}${s} 관계=${g.rel} 낭비=${g.waste} 형태=${g.form} 메모=${g.memo}`);
+      }
+      lines.push(`${p.id} 더나음=${d.better}`);
+    }
+    return lines.join("\n");
+  }
+
+  function refresh() {
+    let done = 0;
+    for (const p of PAIRS) {
+      const st = pairState(state[p.id]);
+      if (st === "done") done++;
+      const pill = $(`[data-state-for="${p.id}"]`);
+      pill.dataset.state = st; pill.textContent = STATE_LABEL[st];
+      $(`[data-nav="${p.id}"]`).dataset.state = st;
+    }
+    $("#progress").textContent = `${done}/${PAIRS.length} 쌍 완료`;
+    $("#out").textContent = exportText();
+  }
+
+  const saveEl = $("#save");
+  function setSave(kind, text) { saveEl.dataset.kind = kind; saveEl.textContent = text; }
+
+  function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  // Remote store: one document per pair at grades/<id>.
+  let db = null, readOnly = false;
+  const timers = {}, inflight = {}, again = {};
+  function queueRemote(id) {
+    if (!db || readOnly) return;
+    clearTimeout(timers[id]);
+    timers[id] = setTimeout(() => { timers[id] = null; flush(id); }, 500);
+  }
+  function busy() { return Object.values(inflight).some(Boolean) || Object.values(again).some(Boolean); }
+  async function flush(id, retried = false) {
+    if (!db || readOnly) return;
+    if (inflight[id]) { again[id] = true; return; }
+    inflight[id] = true; again[id] = false;
+    setSave("saving", "저장 중…");
+    let ok = true;
+    try {
+      await db.doc("grades/" + id).set({ ...JSON.parse(JSON.stringify(state[id])), updatedAt: new Date().toISOString() });
+    } catch (e) {
+      ok = false;
+      const code = e && e.code;
+      if (code === "unavailable" && !retried) {
+        inflight[id] = false;
+        setTimeout(() => flush(id, true), 800 + Math.random() * 800);
+        return;
+      }
+      if (code === "invalid_argument" || code === "not_granted" || code === "revoked") {
+        readOnly = true;
+        setSave("error", "서버에 저장할 수 없음 · 아래 텍스트를 복사해 주세요");
+      } else {
+        setSave("error", "저장 실패 · 입력은 이 브라우저에 남아 있습니다");
+      }
+    }
+    inflight[id] = false;
+    if (again[id]) return flush(id);
+    if (ok && !busy()) setSave("saved", "저장됨 · Claude가 읽을 수 있음");
+  }
+
+  function onChange(id) {
+    const next = readDom(id);
+    if (same(next, state[id])) return;
+    state[id] = next;
+    saveLocal(); refresh(); queueRemote(id);
+  }
+
+  // Clicking a selected chip clears it.
+  document.addEventListener("pointerdown", (e) => {
+    const chip = e.target.closest && e.target.closest("label.chip");
+    if (chip) { const i = chip.querySelector("input"); i.dataset.was = i.checked ? "1" : ""; }
+  });
+  document.addEventListener("click", (e) => {
+    const i = e.target;
+    if (i instanceof HTMLInputElement && i.type === "radio" && i.dataset.was === "1") {
+      i.checked = false; i.dataset.was = "";
+      onChange(i.name.slice(0, 2));
+    }
+  });
+  document.addEventListener("change", (e) => {
+    const i = e.target;
+    if (i instanceof HTMLInputElement && i.type === "radio") { i.dataset.was = ""; onChange(i.name.slice(0, 2)); }
+  });
+  document.addEventListener("input", (e) => {
+    const i = e.target;
+    if (i instanceof HTMLInputElement && i.dataset.memo) onChange(i.dataset.memo.slice(0, 2));
+  });
+
+  $("#copy").addEventListener("click", () => {
+    const text = exportText();
+    const shown = () => { const c = $("#copied"); c.hidden = false; setTimeout(() => { c.hidden = true; }, 1800); };
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents($("#out"));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    };
+    try {
+      navigator.clipboard.writeText(text).then(shown, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  for (const p of PAIRS) writeDom(p.id);
+  refresh();
+  setSave("local", "이 브라우저에만 저장됨");
+
+  (async () => {
+    try { db = window.claude && window.claude.use ? await window.claude.use("db") : null; } catch (e) { db = null; }
+    if (!db) { setSave("local", "이 브라우저에만 저장됨"); return; }
+    setSave("saving", "저장소 연결 중…");
+    let first = true;
+    db.collection("grades").onSnapshot((snap) => {
+      const seen = new Set();
+      for (const doc of snap.docs) {
+        const id = doc.id;
+        if (!state[id]) continue;
+        seen.add(id);
+        if (snap.metadata.hasPendingWrites || inflight[id] || again[id] || timers[id]) continue;
+        const remote = normalize(doc.data());
+        if (!same(remote, state[id])) {
+          if (first && pairState(state[id]) !== "empty" && pairState(remote) === "empty") continue;
+          state[id] = remote; writeDom(id);
+        }
+      }
+      if (first) {
+        first = false;
+        // Push answers graded before the store connected.
+        for (const p of PAIRS) if (!seen.has(p.id) && pairState(state[p.id]) !== "empty") flush(p.id);
+        if (!busy()) setSave("saved", "저장됨 · Claude가 읽을 수 있음");
+      }
+      saveLocal(); refresh();
+    }, (err) => {
+      setSave("error", "저장소 연결 끊김 · 입력은 이 브라우저에 남아 있습니다");
+    });
+  })();
+})();
+</script>

@@ -1,6 +1,6 @@
 # Working on think-with
 
-Use the project-local `manage-skills` skill for changes to skills or packaging, and `port-skill` to bring in a skill from elsewhere.
+Use the project-local `manage-skills` skill for changes to skills or packaging, `port-skill` to bring in a skill from elsewhere, and `blind-grade` to decide through the user's blind grades whether a skill candidate ships.
 
 Edit `src/`, `adapters/`, and `catalog.toml`. Files listed in `.generated.json` are generated; update their sources instead. Internal skills belong only in `src/internal/`; distributable skills belong in `src/skills/`.
 

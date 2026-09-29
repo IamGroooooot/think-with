@@ -1,0 +1,25 @@
+invocation = "explicit"
+files = [
+  "references/workflow.md",
+  "scripts/blind_round.py",
+  "scripts/grading_page.py",
+  "scripts/judge_agreement.py",
+  "assets/grading-page.html",
+]
+
+[claude.blocks]
+grade = """The user grades on an artifact page. Run
+[grading_page.py](scripts/grading_page.py) `<round dir> <scratchpad>/<round>.html`,
+which reads only `outputs-blind.md`, and publish that file with the `Artifact`
+tool, declaring the `db` capability. Give the user the link and wait until
+they say they are done. Then list the `grades` collection with
+`ArtifactData`, save the returned documents unchanged to a scratch file, and
+run [blind_round.py](scripts/blind_round.py) `record <round dir> <file>`. If
+the page reports that it cannot save, ask the user to paste its result text
+and write it to `user-grades.txt`."""
+
+[codex.blocks]
+grade = """Ask the user to read `outputs-blind.md` and fill in
+`user-grades.txt` in place, grading each answer before comparing the pair. If
+they prefer to answer in chat, ask one pair at a time and write that pair's
+lines to `user-grades.txt` before the next."""

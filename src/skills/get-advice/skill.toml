@@ -50,13 +50,13 @@ resume synthesis from the actual results. Report any unfinished stage.
 
 [codex.blocks]
 questions = "Use `request_user_input` when available in the current mode, following its current schema; otherwise ask briefly in chat."
-experts = "Use native `spawn_agent` calls with `model = \"gpt-6-astra\"`, `reasoning_effort = \"low\"`, and `fork_turns = \"none\"`. Pass each expert only its self-contained brief."
-checkers = "Use native `spawn_agent` calls with `model = \"gpt-6-sol\"`, `reasoning_effort = \"xhigh\"`, and `fork_turns = \"none\"`. Pass each checker only its assigned evidence bundle."
+experts = "Use native `spawn_agent` calls with `model = \"gpt-6.1-sol\"`, `reasoning_effort = \"high\"`, and `fork_turns = \"none\"`. Pass each expert only its self-contained brief."
+checkers = "Use native `spawn_agent` calls with `model = \"gpt-6-luna\"`, `reasoning_effort = \"xhigh\"`, and `fork_turns = \"none\"`. Pass each checker only its assigned evidence bundle."
 execution = '''
 Use the session's native `spawn_agent` tool with a unique task name and the
 prepared brief as its message. Set `fork_turns = "none"` for every expert and
-checker. Default experts to `gpt-6-astra` with `reasoning_effort = "low"`;
-default checkers to `gpt-6-sol` with `reasoning_effort = "xhigh"`.
+checker. Default experts to `gpt-6.1-sol` with `reasoning_effort = "high"`;
+default checkers to `gpt-6-luna` with `reasoning_effort = "xhigh"`.
 Use the available native messaging and completion tools to collect actual
 results; launching an agent does not establish that its work is complete.
 Follow the tool schema exposed in the current session rather than inventing

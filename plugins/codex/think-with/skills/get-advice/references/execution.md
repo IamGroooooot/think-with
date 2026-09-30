@@ -8,8 +8,8 @@ unless the recipient can read it. Experts and checkers must not delegate.
 
 Use the session's native `spawn_agent` tool with a unique task name and the
 prepared brief as its message. Set `fork_turns = "none"` for every expert and
-checker. Default experts to `gpt-6-astra` with `reasoning_effort = "low"`;
-default checkers to `gpt-6-sol` with `reasoning_effort = "xhigh"`.
+checker. Default experts to `gpt-6.1-sol` with `reasoning_effort = "high"`;
+default checkers to `gpt-6-luna` with `reasoning_effort = "xhigh"`.
 Use the available native messaging and completion tools to collect actual
 results; launching an agent does not establish that its work is complete.
 Follow the tool schema exposed in the current session rather than inventing

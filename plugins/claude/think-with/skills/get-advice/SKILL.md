@@ -28,7 +28,7 @@ Explain what the advice changes, with evidence, applicability limits, and checke
 
 Read [fact-checking](references/fact-check.md) to prepare the evidence handoff. Group material claims, sources, and context by dependency; send independent bundles in parallel to fresh checkers. One suffices for a short answer.
 
-Use fresh `Agent` calls with the bundled `get-advice-checker` type: Claude Sonnet 5.5, medium effort. Pass each checker only its assigned evidence bundle.
+Use fresh `Agent` calls with the bundled `get-advice-checker` type: Claude Haiku 5.5, medium effort. Pass each checker only its assigned evidence bundle.
 Correct errors, exaggeration, and leaps from the checks; recheck only new material claims or unresolved conflicts. Disclose unavailable or unfinished research, delegation, or checking; never invent completion.
 
 ## Runtime

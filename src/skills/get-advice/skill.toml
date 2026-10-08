@@ -20,11 +20,11 @@ agents = [
 [claude.blocks]
 questions = "Use `AskUserQuestion` when available, following its current schema; otherwise ask briefly in chat."
 experts = "Use fresh `Agent` calls with the bundled `get-advice-expert` type: Claude Opus 5.5, low effort. Pass each expert only its self-contained brief."
-checkers = "Use fresh `Agent` calls with the bundled `get-advice-checker` type: Claude Sonnet 5.5, medium effort. Pass each checker only its assigned evidence bundle."
+checkers = "Use fresh `Agent` calls with the bundled `get-advice-checker` type: Claude Haiku 5.5, medium effort. Pass each checker only its assigned evidence bundle."
 execution = '''
 The plugin registers `think-with:get-advice-expert` (model
 `claude-opus-5-5`, effort `low`) and `think-with:get-advice-checker`
-(model `claude-sonnet-5-5`, effort `medium`). Use the registered type in
+(model `claude-haiku-5-5`, effort `medium`). Use the registered type in
 `Agent.subagent_type`, with a short `description` and a self-contained `prompt`.
 The definitions set model and effort; do not override them with a floating model
 alias or pass Codex's `reasoning_effort` or `fork_turns` fields to `Agent`.

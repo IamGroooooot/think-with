@@ -27,6 +27,9 @@ The source skill had no working-tree changes when inspected.
 - Codex model update (plugin 0.1.6): experts use GPT-6.1 Sol high and checkers
   use GPT-6 Luna xhigh. Claude workers are unchanged.
 
+- Claude model update (plugin 0.1.7): experts stay on Opus 5.5 low and
+  checkers move from Sonnet 5.5 medium to Haiku 5.5 medium.
+
 ## Checks run
 
 Validated with Claude Code 2.1.263 and Codex CLI 0.153.4.

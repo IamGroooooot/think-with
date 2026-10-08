@@ -8,7 +8,7 @@ unless the recipient can read it. Experts and checkers must not delegate.
 
 The plugin registers `think-with:get-advice-expert` (model
 `claude-opus-5-5`, effort `low`) and `think-with:get-advice-checker`
-(model `claude-sonnet-5-5`, effort `medium`). Use the registered type in
+(model `claude-haiku-5-5`, effort `medium`). Use the registered type in
 `Agent.subagent_type`, with a short `description` and a self-contained `prompt`.
 The definitions set model and effort; do not override them with a floating model
 alias or pass Codex's `reasoning_effort` or `fork_turns` fields to `Agent`.
